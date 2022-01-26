@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SavedStateHandleActivity" />
+        <activity android:name=".SharedPreferencesActivity" />
+        <activity android:name=".DatabaseActivity" />
+        <activity android:name=".LiveDataActivity" />
+        <activity android:name=".KotlinFlowActivity" />
     </application>
 
 </manifest>

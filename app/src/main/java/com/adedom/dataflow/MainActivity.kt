@@ -27,6 +27,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.btnSharedPreferencesV2.setOnClickListener {
+            val intent = Intent(this, SharedPreferencesV2Activity::class.java)
+            intent.putExtra("title", "Shared preferences v2")
+            startActivity(intent)
+        }
+
         binding.btnDatabase.setOnClickListener {
             val intent = Intent(this, DatabaseActivity::class.java)
             intent.putExtra("title", "Database")

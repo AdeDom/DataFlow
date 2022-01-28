@@ -91,7 +91,8 @@ class SharedPreferencesV2Activity : BaseActivity() {
         }
 
         binding.btnSendData.setOnClickListener {
-            viewModel.sendData()
+            val data = System.currentTimeMillis().toString()
+            viewModel.sendData(data)
         }
     }
 }
@@ -145,22 +146,21 @@ class SharedPreferencesV2ViewModel @Inject constructor(
     private val defaultRepository: DefaultRepository,
 ) : ViewModel() {
 
-    fun sendData() {
-        defaultRepository.saveData()
+    fun sendData(data: String) {
+        defaultRepository.saveData(data)
     }
 }
 
 interface DefaultRepository {
 
-    fun saveData()
+    fun saveData(data: String)
 }
 
 class DefaultRepositoryImpl(
     private val sharedPref: SharedPref
 ) : DefaultRepository {
 
-    override fun saveData() {
-        val data = System.currentTimeMillis().toString()
+    override fun saveData(data: String) {
         sharedPref.data = data
     }
 }

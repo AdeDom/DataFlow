@@ -156,7 +156,7 @@ interface DefaultRepository {
     fun saveData(data: String)
 }
 
-class DefaultRepositoryImpl(
+class DefaultRepositoryImpl @Inject constructor(
     private val sharedPref: SharedPref
 ) : DefaultRepository {
 
@@ -170,7 +170,7 @@ interface SharedPref {
     var data: String?
 }
 
-class SharedPrefImpl(context: Context) : SharedPref {
+class SharedPrefImpl @Inject constructor(context: Context) : SharedPref {
 
     private val sharedPreferences =
         context.getSharedPreferences("SharedPreferencesFile", Activity.MODE_PRIVATE)

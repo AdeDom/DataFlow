@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
@@ -14,7 +15,9 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModel
 import com.adedom.dataflow.databinding.ActivitySharedPreferenceV2Binding
 import com.adedom.dataflow.databinding.FragmentSharedPreferenceV2Binding
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity(),
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -65,13 +68,14 @@ abstract class BaseFragment : Fragment(),
     }
 }
 
+@AndroidEntryPoint
 class SharedPreferencesV2Activity : BaseActivity() {
 
     private val binding by lazy {
         ActivitySharedPreferenceV2Binding.inflate(layoutInflater)
     }
 
-    private val viewModel by viewModel<SharedPreferencesV2ViewModel>()
+    private val viewModel by viewModels<SharedPreferencesV2ViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +96,7 @@ class SharedPreferencesV2Activity : BaseActivity() {
     }
 }
 
+@AndroidEntryPoint
 class FrameLayoutTopFragment : BaseFragment() {
 
     private lateinit var binding: FragmentSharedPreferenceV2Binding
@@ -113,6 +118,7 @@ class FrameLayoutTopFragment : BaseFragment() {
     }
 }
 
+@AndroidEntryPoint
 class FrameLayoutBottomFragment : BaseFragment() {
 
     private lateinit var binding: FragmentSharedPreferenceV2Binding
@@ -134,7 +140,8 @@ class FrameLayoutBottomFragment : BaseFragment() {
     }
 }
 
-class SharedPreferencesV2ViewModel(
+@HiltViewModel
+class SharedPreferencesV2ViewModel @Inject constructor(
     private val defaultRepository: DefaultRepository,
 ) : ViewModel() {
 

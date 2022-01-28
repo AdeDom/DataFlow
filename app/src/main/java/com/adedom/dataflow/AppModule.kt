@@ -1,14 +1,24 @@
 package com.adedom.dataflow
 
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
+import android.content.Context
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-val appModule = module {
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
 
-    single<SharedPref> { SharedPrefImpl(get()) }
+    @Singleton
+    @Provides
+    fun provideSharedPref(@ApplicationContext context: Context): SharedPref =
+        SharedPrefImpl(context)
 
-    single<DefaultRepository> { DefaultRepositoryImpl(get()) }
-
-    viewModel { SharedPreferencesV2ViewModel(get()) }
-
+    @Singleton
+    @Provides
+    fun provideDefaultRepository(sharedPref: SharedPref): DefaultRepository =
+        DefaultRepositoryImpl(sharedPref)
 }

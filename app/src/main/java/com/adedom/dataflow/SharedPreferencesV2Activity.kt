@@ -1,7 +1,5 @@
 package com.adedom.dataflow
 
-import android.app.Activity
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,57 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-abstract class BaseActivity : AppCompatActivity(),
-    SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private lateinit var sharedPreferences: SharedPreferences
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        sharedPreferences = getSharedPreferences("SharedPreferencesFile", Activity.MODE_PRIVATE)
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-    }
-
-    override fun onStart() {
-        super.onStart()
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
-    }
-}
-
-abstract class BaseFragment : Fragment(),
-    SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private var sharedPreferences: SharedPreferences? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        sharedPreferences =
-            context?.getSharedPreferences("SharedPreferencesFile", Activity.MODE_PRIVATE)
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-    }
-
-    override fun onStart() {
-        super.onStart()
-        sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
-    }
-}
-
 @AndroidEntryPoint
-class SharedPreferencesV2Activity : BaseActivity() {
+class SharedPreferencesV2Activity : AppCompatActivity() {
 
     private val binding by lazy {
         ActivitySharedPreferenceV2Binding.inflate(layoutInflater)
@@ -98,7 +47,10 @@ class SharedPreferencesV2Activity : BaseActivity() {
 }
 
 @AndroidEntryPoint
-class FrameLayoutTopFragment : BaseFragment() {
+class FrameLayoutTopFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListener {
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var binding: FragmentSharedPreferenceV2Binding
 
@@ -116,11 +68,24 @@ class FrameLayoutTopFragment : BaseFragment() {
             val data = sharedPreferences?.getString("data", "")
             binding.tvData.text = data
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 }
 
 @AndroidEntryPoint
-class FrameLayoutBottomFragment : BaseFragment() {
+class FrameLayoutBottomFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListener {
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var binding: FragmentSharedPreferenceV2Binding
 
@@ -138,6 +103,16 @@ class FrameLayoutBottomFragment : BaseFragment() {
             val data = sharedPreferences?.getString("data", "")
             binding.tvData.text = data
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 }
 
@@ -170,10 +145,9 @@ interface SharedPref {
     var data: String?
 }
 
-class SharedPrefImpl @Inject constructor(context: Context) : SharedPref {
-
-    private val sharedPreferences =
-        context.getSharedPreferences("SharedPreferencesFile", Activity.MODE_PRIVATE)
+class SharedPrefImpl @Inject constructor(
+    private val sharedPreferences: SharedPreferences
+) : SharedPref {
 
     override var data: String?
         get() = sharedPreferences.getString("data", "")

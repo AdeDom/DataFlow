@@ -1,12 +1,14 @@
 package com.adedom.dataflow
 
-import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.adedom.dataflow.databinding.ActivityDataFlowBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SharedPreferencesActivity : AppCompatActivity(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -14,15 +16,14 @@ class SharedPreferencesActivity : AppCompatActivity(),
         ActivityDataFlowBinding.inflate(layoutInflater)
     }
 
-    private lateinit var sharedPreferences: SharedPreferences
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         val title = intent.getStringExtra("title")
         binding.tvTitle.text = title
-
-        sharedPreferences = getSharedPreferences("SharedPreferencesFile", Activity.MODE_PRIVATE)
 
         binding.btnSendData.setOnClickListener {
             val data = System.currentTimeMillis().toString()

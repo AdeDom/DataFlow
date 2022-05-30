@@ -21,7 +21,6 @@
         </activity>
         <activity android:name=".SavedStateHandleActivity" />
         <activity android:name=".SharedPreferencesActivity" />
-        <activity android:name=".SharedPreferencesV2Activity" />
         <activity android:name=".DatabaseActivity" />
         <activity android:name=".LiveDataActivity" />
         <activity android:name=".KotlinFlowActivity" />
